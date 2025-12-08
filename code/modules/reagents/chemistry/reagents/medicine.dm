@@ -209,7 +209,7 @@
 	overdose_threshold = 30
 	harmless = FALSE
 	taste_description = "reformation"
-	goal_difficulty = REAGENT_GOAL_NORMAL
+	goal_difficulty = REAGENT_GOAL_HARD
 
 /datum/reagent/medicine/rezadone/on_mob_life(mob/living/M)
 	var/update_flags = STATUS_UPDATE_NONE
