@@ -932,11 +932,13 @@
 	implant_color = "#0ac0d8"
 	origin_tech = "materials=4;programming=4;biotech=4;magnets=4;engineering=4"
 	materials = list(MAT_METAL = 12500, MAT_SILVER = 12000, MAT_GOLD = 2500, MAT_PLASMA = 5000)
+	actions_types = list(/datum/action/item_action/organ_action/toggle/ipc_repair)
 	slot = "stomach" //Can't have a nutriment pump with it.
+	var/active = FALSE
 	requires_machine_person = TRUE
 
 /obj/item/organ/internal/cyberimp/chest/ipc_repair/on_life()
-	if(crit_fail)
+	if(crit_fail || !active)
 		return
 	if(status & ORGAN_DEAD)
 		return FALSE
@@ -953,6 +955,19 @@
 		return
 	crit_fail = TRUE
 	addtimer(VARSET_CALLBACK(src, crit_fail, FALSE), 30 SECONDS / severity)
+
+/datum/action/item_action/organ_action/toggle/ipc_repair
+	desc = "Toggle your reactive repair system, consumes charge while active to slowly restore chassis integrity."
+
+/datum/action/item_action/organ_action/toggle/ipc_repair/Trigger(left_click, attack_self)
+	. = ..()
+	var/obj/item/organ/internal/cyberimp/chest/ipc_repair/implant = target
+	if(implant.active)
+		to_chat(owner, SPAN_NOTICE("[implant] disabled!"))
+		implant.active = FALSE
+	else
+		to_chat(owner, SPAN_NOTICE("[implant] enabled!"))
+		implant.active = TRUE
 
 /obj/item/organ/internal/cyberimp/chest/ipc_joints
 	name = "IPC ER-OR Joint Implant"
